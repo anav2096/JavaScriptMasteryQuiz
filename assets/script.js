@@ -48,7 +48,6 @@ var totalTime = 50; //seconds left
 var timeDeduct = 5; //penalty
 var deductCounter = 0;
 var quizBody = document.querySelector("#quizBody");
-var quizContainer = document.querySelector("quizContainer");
 var answerList = document.createElement("ul");
 
 
@@ -123,7 +122,7 @@ function finished() {
     // Heading:
     var endH1 = document.createElement("h1");
     endH1.setAttribute("id", "finishingH1");
-    endH1.textContent = "You are Done!"
+    endH1.textContent = "Quiz Over"
 
     quizBody.appendChild(endH1);
 
