@@ -1,0 +1,10 @@
+#startButtton {
+    background-color: purple;
+    margin-left: 33%;
+    padding: 15px 32px;
+    font-size: 20px;
+    color: white;
+}
+#quizBody {
+    margin: 20px;
+}

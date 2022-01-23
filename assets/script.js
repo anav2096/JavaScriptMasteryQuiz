@@ -42,27 +42,45 @@ var questions = [
 
 var score = 0;
 var questionArray = 0;
-var startButton = document.querySelector("#startButton");
-var time = document.querySelector("#time");
-var totalTime = 50;
-var timeLeft = 0;
-var timeDeduct = 5;
+var time = document.querySelector("#time");//current time
+var timer = document.querySelector("#timer");//startTime
+var totalTime = 50; //seconds left
+var timeDeduct = 5; //penalty
+var deductCounter = 0;
 var quizBody = document.querySelector("#quizBody");
+var quizContainer = document.querySelector("quizContainer");
 var answerList = document.createElement("ul");
 
 
+
+timer.addEventListener("click", function () {
+    // We are checking zero because its originally set to zero
+    if (deductCounter === 0) {
+        deductCounter = setInterval(function () {
+            totalTime--;
+            time.textContent = "Time: " + totalTime;
+
+            if (totalTime <= 0) {
+                clearInterval(deductCounter);
+                finished();
+                time.textContent = "Time has run out!";
+            }
+        }, 1000);
+    }
+    createQuiz(questionArray);
+});
 
 function createQuiz(questionArray){
   
     quizBody.innerHTML = "";
     answerList.innerHTML = "";
-    for (var i=0; i<questions.length; i++){
-    var displayQuestion = questions[questionIndex].q;
-    var displayAnswers = questions[questionIndex].a;
+    for (var i = 0; i <questions.length; i++){
+    var displayQuestion = questions[questionArray].q;
+    var displayChoices = questions[questionArray].c;
     quizBody.textContent = displayQuestion;
 }
 
-    displayAnswers.forEach(function (newItem) {
+    displayChoices.forEach(function (newItem) {
         var answerItem = document.createElement("li");
         answerItem.textContent = newItem;
         quizBody.appendChild(answerList);
@@ -75,15 +93,15 @@ function compare(event) {
     var element = event.target;
     if (element.matches("li")) {
         var createDiv = document.createElement("div");
-        createDiv.setAtrributes("id" , "createDiv");
+        createDiv.setAttribute("id" , "createDiv");
     
-        if (element.textContent == questions[questionIndex].a){
+        if (element.textContent == questions[questionArray].a){
         score++;
-        alert.textContent = "Correct!"
+        createDiv.textContent = "Correct!"
         }
         else {
             totalTime = totalTime - timeDeduct;
-            createDiv.textContent = "incorrect";
+            createDiv.textContent = "Incorrect";
         }
     
     }
@@ -95,7 +113,84 @@ function compare(event) {
     } else {
         createQuiz(questionArray);
     } 
-        quizBody.appendChile(createDiv);
+        quizBody.appendChild(createDiv);
+}
+
+function finished() {
+    quizBody.innerHTML = "";
+    time.innerHTML = "";
+
+    // Heading:
+    var endH1 = document.createElement("h1");
+    endH1.setAttribute("id", "finishingH1");
+    endH1.textContent = "You are Done!"
+
+    quizBody.appendChild(endH1);
+
+    // Paragraph
+    var endP = document.createElement("p");
+    endP.setAttribute("id", "endP");
+
+    quizBody.appendChild(endP);
+
+    // Calculates time remaining and replaces it with score
+    if (time >= 0) {
+        var timeLeft = time;
+        var createP2 = document.createElement("p");
+        clearInterval(deductCounter);
+        endP.textContent = "Your final time is: " + timeLeft;
+
+        quizBody.appendChild(createP2);
+    }
+    var createLabel = document.createElement("label");
+    createLabel.setAttribute("id", "createLabel");
+    createLabel.textContent = "Enter initials: ";
+
+    quizBody.appendChild(createLabel);
+
+
+    var createInput = document.createElement("input");
+    createInput.setAttribute("type", "text");
+    createInput.setAttribute("id", "initials");
+    createInput.textContent = "";
+
+    quizBody.appendChild(createInput);
+
+    // submit
+    var createSubmit = document.createElement("button");
+    createSubmit.setAttribute("type", "submit");
+    createSubmit.setAttribute("id", "Submit");
+    createSubmit.textContent = "Submit";
+
+    quizBody.appendChild(createSubmit);
+    
+    createSubmit.addEventListener("click", function () {
+        var initials = createInput.value;
+
+        if (initials === null) {
+
+            console.log("No value entered!");
+
+        } else {
+            var finalScore = {
+                initials: initials,
+                score: timeLeft
+            }
+            console.log(finalScore);
+            var allScores = localStorage.getItem("allScores");
+            if (allScores === null) {
+                allScores = [];
+            } else {
+                allScores = JSON.parse(allScores);
+            }
+            allScores.push(finalScore);
+            var newScore = JSON.stringify(allScores);
+            localStorage.setItem("allScores", newScore);
+            // Travels to final page
+            window.location.replace("./HighScores.html");
+        }
+    });
+
 }
 
 
