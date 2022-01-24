@@ -42,10 +42,10 @@ var questions = [
 
 var score = 0;
 var questionArray = 0;
-var time = document.querySelector("#time");//current time
-var timer = document.querySelector("#timer");//startTime
-var totalTime = 50; //seconds left
-var timeDeduct = 5; //penalty
+var time = document.querySelector("#time");
+var timer = document.querySelector("#timer");
+var totalTime = 50; 
+var timeDeduct = 5;
 var deductCounter = 0;
 var quizBody = document.querySelector("#quizBody");
 var answerList = document.createElement("ul");
@@ -53,7 +53,7 @@ var answerList = document.createElement("ul");
 
 
 timer.addEventListener("click", function () {
-    // We are checking zero because its originally set to zero
+    
     if (deductCounter === 0) {
         deductCounter = setInterval(function () {
             totalTime--;
@@ -132,7 +132,6 @@ function finished() {
 
     quizBody.appendChild(endP);
 
-    // Calculates time remaining and replaces it with score
     if (time >= 0) {
         var timeLeft = time;
         var createP2 = document.createElement("p");
@@ -173,7 +172,8 @@ function finished() {
         } else {
             var finalScore = {
                 initials: initials,
-                score: timeLeft
+                score: time
+                
             }
             console.log(finalScore);
             var allScores = localStorage.getItem("allScores");
@@ -185,8 +185,7 @@ function finished() {
             allScores.push(finalScore);
             var newScore = JSON.stringify(allScores);
             localStorage.setItem("allScores", newScore);
-            // Travels to final page
-            window.location.replace("./HighScores.html");
+            window.location.replace("./ScoreLog.html");
         }
     });
 
